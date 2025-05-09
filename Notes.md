@@ -167,3 +167,32 @@ MessagesRepo
 list of instance that i have created
 EX:
 MessagesRepo            .MessagesService
+
+14. Sharing Services between modules
+------------------------------------
+a. Add PowerService(service name) service to the PowerModule(module name)
+b. Import the PowerModule(module name) into the CpuModule(module Name)
+c. Define the constructor method on CpuService(service name) and add PowerService(service name) to it
+
+EX:
+--
+PowerModule(module name) File::
+import { Module } from '@nestjs/common';
+import { PowerService } from './power.service';
+
+@Module({
+  providers: [PowerService],
+  exports: [PowerService],
+})
+export class PowerModule {}
+
+CpuModule(module Name) File::
+import { Module } from '@nestjs/common';
+import { CpuService } from './cpu.service';
+import { PowerModule } from '../power/power.module';
+
+@Module({
+  providers: [CpuService],
+  imports: [PowerModule],
+})
+export class CpuModule {}

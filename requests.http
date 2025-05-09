@@ -1,5 +1,5 @@
 ### List all Messages
-GET http://localhost:3000/messages
+GET http://localhost:3000/computer
 
 ### Create a new Message
 POST http://localhost:3000/messages
