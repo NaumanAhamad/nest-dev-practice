@@ -150,3 +150,20 @@ export class MessagesService {
     }
 }
 
+13. Ineversion of cotroll
+-------------------------
+Nest (Dependency Injector)DI container/Injector
+
+It stores two sets of information 
+a. list of classes and their dependencies
+b. list of instance that i have created
+
+List of classes and their dependencies
+EX: 
+  Class                 Dependency 
+MessagService           MessageRepo
+MessagesRepo         
+
+list of instance that i have created
+EX:
+MessagesRepo            .MessagesService
