@@ -98,7 +98,7 @@ create(message: string)
 -----------------
 It's a class
 place to put storage-related logic
-Usually ends up being a TypeORM entity, a Mongoose Schema, or similar
+Usually ends up being a TypeORM ENTITY, a Mongoose Schema, or similar
 findOne(id: string)
 findAll()
 create(message:string)
@@ -167,3 +167,27 @@ MessagesRepo
 list of instance that i have created
 EX:
 MessagesRepo            .MessagesService
+
+14. ENTITY Files
+----------------
+:: An ENTITY is very similar to a model, An ENTITY file defines single kind of resource. 
+that we want to store inside the data base.
+
+EX: User ENTITY  tells we want to store user kind of data in the data base, contains different types
+of properties 
+An User should have probable an email of phone number in the data base.
+When using type orm we dont have to create repository for the user and report here in our application.
+
+STEPS TO CREATE ENTITY FILE
+---------------------------
+1.Create an ENTITY file, and create a class in it that lists all the properties that your ENTITY will have.
+
+2.Connect the ENTITY to its parent module. This create a repository
+
+3.Connect the ENTITY to the root connection (in the app module)
+
+ synchronize: true:  
+ ------------------
+ -> To do a Migration(Renaming column names, adding new column, etc..) of database.
+ Synchronize true only is to do in development enviornment, it will add or remove columns
+ and automatically updates the data base.
