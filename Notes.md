@@ -191,3 +191,49 @@ STEPS TO CREATE ENTITY FILE
  -> To do a Migration(Renaming column names, adding new column, etc..) of database.
  Synchronize true only is to do in development enviornment, it will add or remove columns
  and automatically updates the data base.
+
+15. TypeORM Repository API
+--------------------------
+-> create()     ->      Makes a new instance of an entity, but does not persist it to the DB
+-> save()       ->      Adds or updates a record to the DB
+-> find()       ->      Runs a query and returns a list of entities
+-> findOne()    ->      Run a qurey, returning the first record matching the search criteria (Depreciated do not use use findOneBy() instead)
+-> remove()     ->      Remove a record from the DB
+
+NOTE: By calling Save method on the instance after creating the hooks will be triggered or the hooks will not get triggered
+Like here
+
+@Injectable()
+export class UsersService {
+    constructor(@InjectRepository(User) private repo: Repository<User>) {}
+    create(email: string, password: string) {
+        const user = this.repo.create({ email, password });
+        return this.repo.save(user);
+    }
+}
+
+Example Methods to be call to get hooks triggered
+-------------------------------------------------
+
+Will be called upon the entity instance.
+save()              -> entity instance will be called.
+Remove()            -> entity instance will be called.
+
+    VS
+
+Will Not be called upon the entity instance.
+insert()            -> entity instance will not be called.
+update()            -> entity instance will not be called.
+        &
+Delete()            -> entity instance will not be called.
+
+Custom Interceptor:
+------------------
+interceptor is used to intercept the response before giving to the client response.
+so in this case we have to create a DTO that intercepts the response sending back to client
+base upon their roles assigned to them like ex: user, admin like changes
+So in this case it is used to mutate some data basedn on the user defined roles 
+to see the exact data what they supposed to see.
+
+
+
