@@ -1,18 +1,56 @@
-import { Controller, Post, Get, Delete, Body, Param, Query, Patch, NotFoundException } from '@nestjs/common';
+import { 
+    Controller,
+    Post, 
+    Get, 
+    Delete, 
+    Body, 
+    Param, 
+    Query, 
+    Patch, 
+    NotFoundException,
+    Session,
+} from '@nestjs/common';
 import { createUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 @Serialize(UserDto)
 export class UsersController {
-    constructor(private usersService: UsersService) {}
-    @Post('signup')
-    createUser(@Body() body: createUserDto) {
-       this.usersService.create(body.email, body.password);   
+    constructor(private usersService: UsersService, private authService: AuthService) {}
+    
+    
+    @Post('/signup')
+    async createUser(@Body() body: createUserDto, @Session() session: any) {
+       const user = await this.authService.signUp(body.email, body.password); 
+       session.userId = user.id;
+       return user;
     }
+
+    @Get('/whoami')
+    WhoAmI(@Session() session: any) {
+        return this.usersService.findOne(session.userId);
+    }
+
+    @Post('/signout')
+    signOut(@Session() session:any){
+        session.userId = null;
+    }
+
+    @Post('/signin')
+    async signIn(@Body() body: createUserDto, @Session() session: any) {
+        const { email, password } = body;
+        const user = await this.authService.signIn(email, password);
+        if(!user) {
+            throw new NotFoundException('User not found');
+        }
+        session.userId = user.id;
+        return user;
+    }
+
 
     @Get('/:id')
     async findUser(@Param('id') id: string){
@@ -42,4 +80,15 @@ export class UsersController {
     upadateUser(@Param('id') id: string, @Body() body: UpdateUserDto){
         this.usersService.update(parseInt(id), body);
     }
+
+
+    // @Get('/colors/:color')
+    // getColor(@Param('color') color: string, @Session() session: any) {
+    //     session.color = color;
+    // }
+
+    // @Get('/colors')
+    // getColorSession(@Session() session: any) {
+    //     return session.color;
+    // }
 }
