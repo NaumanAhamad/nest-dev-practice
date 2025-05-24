@@ -9,30 +9,38 @@ import {
     Patch, 
     NotFoundException,
     Session,
+    // UseInterceptors
 } from '@nestjs/common';
-import { createUserDto } from './dtos/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorators';
+// import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { User } from './user.enitity';
+
 
 @Controller('auth')
 @Serialize(UserDto)
+// @UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
     constructor(private usersService: UsersService, private authService: AuthService) {}
     
     
     @Post('/signup')
-    async createUser(@Body() body: createUserDto, @Session() session: any) {
+    async createUser(@Body() body: CreateUserDto, @Session() session: any) {
        const user = await this.authService.signUp(body.email, body.password); 
        session.userId = user.id;
        return user;
     }
 
+
     @Get('/whoami')
-    WhoAmI(@Session() session: any) {
-        return this.usersService.findOne(session.userId);
+    WhoAmI(@CurrentUser() user: User) {
+        // console.log('Current user:', user);
+        return user
     }
 
     @Post('/signout')
@@ -41,7 +49,7 @@ export class UsersController {
     }
 
     @Post('/signin')
-    async signIn(@Body() body: createUserDto, @Session() session: any) {
+    async signIn(@Body() body: CreateUserDto, @Session() session: any) {
         const { email, password } = body;
         const user = await this.authService.signIn(email, password);
         if(!user) {
