@@ -1,0 +1,22 @@
+### Creating a new report
+POST http://localhost:3000/reports
+Content-Type: application/json
+
+{
+    "price": 50000,
+    "make": "Hyundai",
+    "model": "creta",  
+    "year": 2025,
+    "lng": 0,
+    "lat": 0,
+    "mileage": 100
+}
+
+### Approve an existing report
+PATCH http://localhost:3000/reports/4
+Content-Type: application/json
+
+{
+    "Approved": true
+}
+### Reject an existing repor

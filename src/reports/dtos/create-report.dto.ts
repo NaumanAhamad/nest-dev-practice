@@ -8,7 +8,7 @@ export class CreateReportDto {
     make: string;
 
     @IsString()
-    model: string;  
+    model: string; 
 
     @IsNumber()
     @Min(1930)
@@ -18,7 +18,7 @@ export class CreateReportDto {
     @IsLongitude()
     lng: number;
     
-    @IsString()
+    @IsLatitude()
     lat: number;
 
     @IsNumber()
